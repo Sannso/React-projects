@@ -11,7 +11,7 @@ export function Products({ products }: Props) {
     gap-5 w-full">
       {products &&
         products.map((product) => {
-          return <CardProduct product={product}></CardProduct>;
+          return <CardProduct key={product.id} product={product}></CardProduct>;
         })}
     </section>
   );

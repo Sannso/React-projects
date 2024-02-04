@@ -15,39 +15,31 @@ Shopping Cart
  - Guarda en el localStorage el carrito para que se recupere al recargar la pagina
 
 */
-
-import { useEffect, useState } from "react";
+import { CartProvider } from "./appContext";
+import { Cart } from "./components/cart";
+import { Filters } from "./components/filters";
 import { Products } from "./components/products";
-import { getProducts } from "./services/shopingApiService";
-import { APIShopProducts } from "./interfaces";
-
+import { useProducts } from "./hooks/productsHook";
 function App() {
-  const [products, setProducts] = useState<Array<APIShopProducts>>([])
-  const [loading, setLoading] = useState(false)
-
-  const getProductsFromService = async ()=>{
-    await getProducts().then(data => setProducts(data))
-    setLoading(false)
-  }
-
-  useEffect(() =>{
-    setLoading(true)
-    getProductsFromService()
-  }, [])
+  const { products, loading } = useProducts();
 
   return (
-    <>
-      <header className="flex justify-end text-white mx-0 my-auto w-full p-4">
-        <article>carrito</article>
-      </header>
-      <main className="flex flex-col items-center">
-        <h1 className="text-3xl font-bold text-white">Shopping</h1>
-        {
-          loading ? <p>Loading Data</p>
-          :<Products products={products}></Products>
-        }
-      </main>
-    </>
+    <CartProvider>
+      <>
+        <header className="flex justify-end text-white mx-0 my-auto w-full p-4">
+          <Cart></Cart>
+        </header>
+        <main className="flex flex-col items-center">
+          <h1 className="text-3xl font-bold text-white">Shopping</h1>
+          <Filters></Filters>
+          {loading ? (
+            <p className="text-white text-xl mt-20">Loading Data</p>
+          ) : (
+            <Products products={products}></Products>
+          )}
+        </main>
+      </>
+    </CartProvider>
     //footer
   );
 }
